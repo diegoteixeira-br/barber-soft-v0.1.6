@@ -148,8 +148,8 @@ const Sobre = () => {
                     <p><strong>CNPJ:</strong> 63.266.334/0001-21</p>
                   </div>
                   <div>
-                    <p><strong>Endereço:</strong> Rua F. V de Azevedo, 07</p>
-                    <p>Bairro Cohab Nova - Cáceres/MT</p>
+                    <p><strong>Endereço:</strong> Rua das Seriemas, 345</p>
+                    <p>Bairro Vila Mariana - Cáceres/MT</p>
                   </div>
                   <div>
                     <p><strong>E-mail:</strong> contato@dtsolucoesdigital.com.br</p>
