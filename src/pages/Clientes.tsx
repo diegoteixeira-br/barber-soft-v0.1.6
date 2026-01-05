@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Users, Cake, Clock, Plus, Building2 } from "lucide-react";
+import { Search, Users, Cake, Clock, Plus, Building2, Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { ClientCard } from "@/components/clients/ClientCard";
 import { ClientFormModal } from "@/components/clients/ClientFormModal";
 import { useClients, Client, ClientFilter, CreateClientData } from "@/hooks/useClients";
 import { useUnits } from "@/hooks/useUnits";
+import { useCurrentUnit } from "@/contexts/UnitContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,12 +28,18 @@ export default function Clientes() {
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [deletingClient, setDeletingClient] = useState<Client | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [unitFilter, setUnitFilter] = useState<string>("all");
+  const [unitFilter, setUnitFilter] = useState<string>("current");
 
   const { units } = useUnits();
+  const { currentUnitId, isLoading: unitLoading } = useCurrentUnit();
+  
+  const effectiveUnitId = unitFilter === "all" 
+    ? null 
+    : (unitFilter === "current" ? currentUnitId : unitFilter);
+
   const { clients, isLoading, createClient, updateClient, deleteClient } = useClients({
     filter,
-    unitIdFilter: unitFilter === "all" ? null : unitFilter,
+    unitIdFilter: effectiveUnitId,
   });
 
   const filteredClients = useMemo(() => {
@@ -66,6 +73,16 @@ export default function Clientes() {
 
   const showUnitBadge = unitFilter === "all" && units.length > 1;
 
+  if (unitLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -94,6 +111,7 @@ export default function Clientes() {
                   <SelectValue placeholder="Filtrar por unidade" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="current">Unidade Atual</SelectItem>
                   <SelectItem value="all">Todas as Unidades</SelectItem>
                   {units.map((unit) => (
                     <SelectItem key={unit.id} value={unit.id}>
@@ -151,14 +169,22 @@ export default function Clientes() {
             ))}
           </div>
         ) : filteredClients.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-card/50 py-16">
-            <Users className="h-12 w-12 text-muted-foreground/50" />
-            <h3 className="mt-4 text-lg font-medium text-foreground">
-              Nenhum cliente encontrado
-            </h3>
-            <p className="mt-1 text-center text-sm text-muted-foreground max-w-sm">
-              Clique em "Novo Cliente" para cadastrar seu primeiro cliente.
-            </p>
+          <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-dashed border-border bg-card/50">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <Users className="h-12 w-12 text-muted-foreground/50" />
+              <div>
+                <h3 className="text-lg font-medium text-foreground">
+                  Nenhum cliente cadastrado
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Adicione seu primeiro cliente para começar
+                </p>
+              </div>
+              <Button onClick={() => setIsCreating(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Adicionar Cliente
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -182,7 +208,7 @@ export default function Clientes() {
         onCreate={handleCreate}
         isLoading={createClient.isPending}
         units={units}
-        defaultUnitId={unitFilter !== "all" ? unitFilter : undefined}
+        defaultUnitId={effectiveUnitId || undefined}
       />
 
       {/* Edit Modal */}
