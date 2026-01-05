@@ -162,7 +162,7 @@ const Contato = () => {
                   <div>
                     <h4 className="font-semibold mb-1">Endereço</h4>
                     <p className="text-sm text-muted-foreground">
-                      Rua F. V de Azevedo, 07 - Cohab Nova<br />
+                      Rua das Seriemas, 345 - Vila Mariana<br />
                       Cáceres - MT
                     </p>
                   </div>

@@ -174,7 +174,7 @@ const LGPD = () => {
               <div className="bg-muted p-4 rounded-lg">
                 <p><strong>Nome:</strong> Equipe DT Soluções Digital</p>
                 <p><strong>E-mail:</strong> contato@dtsolucoesdigital.com.br</p>
-                <p><strong>Endereço:</strong> Rua F. V de Azevedo, 07 - Cohab Nova, Cáceres-MT</p>
+                <p><strong>Endereço:</strong> Rua das Seriemas, 345 - Vila Mariana, Cáceres-MT</p>
               </div>
             </CardContent>
           </Card>

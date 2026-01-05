@@ -205,7 +205,7 @@ const Termos = () => {
           </p>
           <ul>
             <li><strong>E-mail:</strong> contato@dtsolucoesdigital.com.br</li>
-            <li><strong>Endereço:</strong> Rua F. V de Azevedo, 07 - Cohab Nova, Cáceres-MT</li>
+            <li><strong>Endereço:</strong> Rua das Seriemas, 345 - Vila Mariana, Cáceres-MT</li>
           </ul>
         </section>
       </article>
