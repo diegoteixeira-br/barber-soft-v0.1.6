@@ -156,6 +156,44 @@ serve(async (req) => {
           throw new Error('Erro ao salvar dados da instância');
         }
 
+        // Configure instance behavior settings automatically
+        const settingsPayload = {
+          rejectCall: true,
+          msgCall: "Não recebemos ligações neste número, só por mensagem de texto ou áudio.",
+          groupsIgnore: true,
+          alwaysOnline: true,
+          readMessages: true,
+          readStatus: true,
+          syncFullHistory: false
+        };
+
+        console.log('Setting instance behavior:', JSON.stringify(settingsPayload));
+
+        try {
+          const settingsResponse = await fetch(
+            `${EVOLUTION_API_URL}/settings/set/${instanceName}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': EVOLUTION_GLOBAL_KEY!,
+              },
+              body: JSON.stringify(settingsPayload),
+            }
+          );
+
+          const settingsData = await settingsResponse.json();
+          console.log('Settings response:', JSON.stringify(settingsData));
+
+          if (!settingsResponse.ok) {
+            console.warn('Failed to set behavior settings:', settingsData.message || 'Unknown error');
+          } else {
+            console.log('Instance behavior configured successfully');
+          }
+        } catch (settingsError) {
+          console.warn('Error setting behavior (non-critical):', settingsError);
+        }
+
         // Get QR Code with retry mechanism - Evolution API may take time to generate
         let extractedQR = null;
         let pairingCode = null;
